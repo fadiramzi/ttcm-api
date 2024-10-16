@@ -19,7 +19,7 @@ namespace ttcm_api.Services
         {
             Category category = new Category();
             category.Name = c.Name;
-            _mainAppContext.Categories.Add(category);
+            await _mainAppContext.Categories.AddAsync(category);
             _mainAppContext.SaveChanges();
         }
 
@@ -27,7 +27,7 @@ namespace ttcm_api.Services
         {
             // SELECT * FROM Categories
             // Join wiht Programs
-            return _mainAppContext.Categories;
+            return await _mainAppContext.Categories.ToListAsync();
         }
 
         public async Task<bool> Delete(Category c)
@@ -54,7 +54,7 @@ namespace ttcm_api.Services
 
         public async Task<Category> GetById(int Id)
         {
-           return _mainAppContext.Categories.FirstOrDefault(c => c.Id == Id);
+           return await _mainAppContext.Categories.FirstOrDefaultAsync(c => c.Id == Id);
         }
     }
 
