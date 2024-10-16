@@ -1,14 +1,19 @@
-﻿using ttcm_api.Interfaces;
+﻿using ttcm_api.Contexts;
+using ttcm_api.Interfaces;
 
 namespace ttcm_api.Services
 {
     public class ProgramsService : IProgramCRUD
     {
+        private MainAppContext _appContext;
         public static List<ttcm_api.Models.Program> Programs = new List<ttcm_api.Models.Program>();
-
+        public ProgramsService(MainAppContext mainAppContext)
+        {
+            _appContext = mainAppContext;
+        }
         public Models.Program Update(int id, Models.Program newProgram)
         {
-//#1 go to the programs list and get the resource
+            //#1 go to the programs list and get the resource
             var oldProgam = Programs.FirstOrDefault(p => p.Id == id);
             if (oldProgam != null)
             {
@@ -32,7 +37,7 @@ namespace ttcm_api.Services
 
         IEnumerable<Models.Program> IProgramCRUD.GetAll()
         {
-            return Programs;
+            return _appContext.Programs.ToList() ;
         }
 
         Models.Program IProgramCRUD.Create(Models.Program p)
