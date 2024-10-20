@@ -5,4 +5,8 @@
             public string Name { get; set; }
         
     }
+    public class CategoryDTOResponse:CategoryDTO
+    {
+        public int Id { get; set; }
+    }
 }

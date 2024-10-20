@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ttcm_api.DTOs;
 using ttcm_api.Interfaces;
 using ttcm_api.Models;
 using ttcm_api.Services;
 
-namespace ttcm_api.Controllers
+namespace ttcm_api.Controllers.admins.v1
 {
-    [Route("api/v1/programs")]
+    [Route("api/admins/v1/programs")]
     [ApiController]
     public class ProgramController : ControllerBase
     {
@@ -14,34 +15,39 @@ namespace ttcm_api.Controllers
         // to be fetched from DI container, auto
         // SHOULD BE ADDED to the container of DI at program.cs file
         private IProgramCRUD _programsService;
-        public ProgramController(IProgramCRUD programsService) {
+        public ProgramController(IProgramCRUD programsService)
+        {
             _programsService = programsService;
         }
 
         // Read:R
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            
-            return Ok(_programsService.GetAll());
+            IEnumerable<ProgramDTOResponseCategory> programs = await _programsService.GetAll();
+            return Ok(programs);
         }
 
 
         [HttpPost]
-        public IActionResult Create([FromBody] ttcm_api.Models.Program program)
+        public async Task<IActionResult> Create([FromBody] ProgramDTORequestWithCategory program)
         {
-            _programsService.Create(program);
+
+            var p =await _programsService.Create(program);
+
+
+
             //return Ok(program);// Http 200 => success
-            return CreatedAtAction("Create", new { Id = program.Id }, program);
+            return CreatedAtAction("Create", new { p.Id }, program);
 
         }
 
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] ttcm_api.Models.Program newProgram)
+        public async Task<IActionResult> Update(int id, [FromBody] Models.Program newProgram)
         {
 
-           
+
             var newProg = _programsService.Update(id, newProgram);
             if (newProg != null)
             {
@@ -53,10 +59,10 @@ namespace ttcm_api.Controllers
 
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            
-            bool isDone =  _programsService.Delete(id);
+
+            bool isDone = await _programsService.Delete(id);
             if (isDone)
             {
                 return Ok();

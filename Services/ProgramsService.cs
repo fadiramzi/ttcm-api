@@ -1,50 +1,73 @@
-﻿using ttcm_api.Contexts;
+﻿using Microsoft.EntityFrameworkCore;
+using ttcm_api.Contexts;
+using ttcm_api.DTOs;
 using ttcm_api.Interfaces;
 
 namespace ttcm_api.Services
 {
     public class ProgramsService : IProgramCRUD
     {
-        private MainAppContext _appContext;
-        public static List<ttcm_api.Models.Program> Programs = new List<ttcm_api.Models.Program>();
+        private MainAppContext _mainAppContext;
+
         public ProgramsService(MainAppContext mainAppContext)
         {
-            _appContext = mainAppContext;
+            _mainAppContext = mainAppContext;
         }
-        public Models.Program Update(int id, Models.Program newProgram)
+        public async Task<Models.Program> Update(int id, Models.Program newProgram)
         {
             //#1 go to the programs list and get the resource
-            var oldProgam = Programs.FirstOrDefault(p => p.Id == id);
+            var oldProgam = await _mainAppContext.Programs.FirstOrDefaultAsync(p => p.Id == id);
             if (oldProgam != null)
             {
                 oldProgam.Title = newProgram.Title;
+                await _mainAppContext.SaveChangesAsync();
             }
 
             return oldProgam;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             // #1 go to the programs list and get the resource
-            var program = Programs.FirstOrDefault(p => p.Id == id);
+            var program = await _mainAppContext.Programs.FirstOrDefaultAsync(p => p.Id == id);
             if (program != null)
             {
-                Programs.Remove(program);
+                _mainAppContext.Programs.Remove(program);
+                await _mainAppContext.SaveChangesAsync();
                 return true;
             }
             return false;
         }
 
-        IEnumerable<Models.Program> IProgramCRUD.GetAll()
+        public async Task<IEnumerable<ProgramDTOResponseCategory>> GetAll()
         {
-            return _appContext.Programs.ToList() ;
+            var programs = await _mainAppContext.Programs
+                .Include(p => p.Category)
+                 .Select(p=> new ProgramDTOResponseCategory { 
+                        Id = p.Id,
+                        Title = p.Title,
+                        Description = p.Description,
+                        CategoryId = p.CategoryId,
+                        Category = new CategoryDTOResponse { 
+                            Id = p.Category.Id,
+                            Name = p.Category.Name,
+                        }
+                    })
+                .ToListAsync();
+            return programs;
         }
 
-        Models.Program IProgramCRUD.Create(Models.Program p)
+       public async Task<Models.Program> Create(ProgramDTORequestWithCategory p)
         {
-            Programs.Add(p);
+           Models.Program model = new Models.Program();
+            model.Title = p.Title;
+            model.Description = p.Description;
+            model.CategoryId = p.CategoryId;
 
-            return p;
+            await  _mainAppContext.Programs.AddAsync(model);
+            await _mainAppContext.SaveChangesAsync();
+
+            return model;
         }
 
       

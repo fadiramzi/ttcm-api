@@ -1,13 +1,14 @@
-﻿using ttcm_api.Models;
+﻿using ttcm_api.DTOs;
+using ttcm_api.Models;
 
 namespace ttcm_api.Interfaces
 {
     public interface IProgramCRUD
     {
-        public IEnumerable<ttcm_api.Models.Program> GetAll();
-        public ttcm_api.Models.Program Create(ttcm_api.Models.Program p);
-        public ttcm_api.Models.Program Update(int id, ttcm_api.Models.Program newProgram);
-        public bool Delete(int id);
+        public Task<IEnumerable<ProgramDTOResponseCategory>> GetAll();
+        public Task<ttcm_api.Models.Program> Create(ProgramDTORequestWithCategory p);
+        public Task<ttcm_api.Models.Program> Update(int id, ttcm_api.Models.Program newProgram);
+        public Task<bool> Delete(int id);
 
 
     }

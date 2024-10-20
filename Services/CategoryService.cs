@@ -20,7 +20,7 @@ namespace ttcm_api.Services
             Category category = new Category();
             category.Name = c.Name;
             await _mainAppContext.Categories.AddAsync(category);
-            _mainAppContext.SaveChanges();
+            await _mainAppContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Category>> GetAll()
@@ -37,24 +37,27 @@ namespace ttcm_api.Services
             return true;
         }
 
-        public Task<bool> Edit(Category c)
+        public async Task<bool> Edit(Category c)
         {
             try
             {
                 _mainAppContext.Categories.Update(c);
                 _mainAppContext.SaveChangesAsync();
-                return Task.FromResult(true);
+                return true;
             }
             catch (Exception ex)
             {
-               return Task.FromResult(false);
+                return true;
             }
 
         }
 
         public async Task<Category> GetById(int Id)
         {
-           return await _mainAppContext.Categories.FirstOrDefaultAsync(c => c.Id == Id);
+            Category c = await _mainAppContext.Categories.FirstOrDefaultAsync(c => c.Id == Id);
+
+
+            return c;
         }
     }
 

@@ -10,6 +10,7 @@ builder.Services.AddDbContext<MainAppContext>(options => options.UseSqlite("Data
 
 builder.Services.AddScoped<ICategoryCRUD, CategoryService>();
 builder.Services.AddScoped<IProgramCRUD, ProgramsService>();
+builder.Services.AddScoped<ITrainerCRUD, TrainerService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
