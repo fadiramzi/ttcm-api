@@ -17,13 +17,13 @@ namespace ttcm_api.Services
         public async Task Create(TrainerDTO c)
         {
             Trainer t = new Trainer();
-            t.Username = c.Username;
-            t.Password = c.Password;
+            t.UserName = c.Username;
+            t.PasswordHash = c.Password;
             t.Salary = c.Salary;
-            t.Phone = c.Phone;
+            t.PhoneNumber = c.Phone;
             t.Specialization = c.Specialization;
             t.Email = c.Email;
-            t.Role = c.Role;
+            //t = c.Role;
             await _mainAppContext.AddAsync(t);
             await _mainAppContext.SaveChangesAsync();
 
@@ -51,12 +51,12 @@ namespace ttcm_api.Services
                 .Select(t => new TrainerDTOResponse
                 {
                     Id = t.Id,
-                    Username = t.Username,
-                    Phone = t.Phone,
+                    Username = t.UserName,
+                    Phone = t.PhoneNumber,
                     Email = t.Email,
                     Salary = t.Salary,
                     Specialization = t.Specialization,
-                    Role = t.Role,
+                    //Role = t.Role,
                     Courses = t.Courses.Select(c => new CourseDTOResponse { 
                             Id = c.Id,
                             Currency = c.Currency,

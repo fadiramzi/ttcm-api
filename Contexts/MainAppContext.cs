@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ttcm_api.Models;
 
 namespace ttcm_api.Contexts
 {
-    public class MainAppContext:DbContext
+    public class MainAppContext:IdentityDbContext<User, ApplicationRole, int>
     {
         public DbSet<ttcm_api.Models.Program> Programs { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -13,6 +14,12 @@ namespace ttcm_api.Contexts
 
         public MainAppContext(DbContextOptions<MainAppContext> options):base(options)
         {
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
 
         }
     }
