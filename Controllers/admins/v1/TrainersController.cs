@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ttcm_api.Contexts;
 using ttcm_api.DTOs;
@@ -7,6 +8,7 @@ using ttcm_api.Services;
 
 namespace ttcm_api.Controllers.admins.v1
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/admins/v1/trainers")]
     [ApiController]
     public class TrainersController : ControllerBase

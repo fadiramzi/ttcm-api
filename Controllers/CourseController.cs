@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ttcm_api.Models;
 
@@ -9,12 +10,14 @@ namespace ttcm_api.Controllers
 
 
     // /api/courses
+    
     [Route("api/courses")]
     [ApiController]
     public class CourseController : ControllerBase
     {
         public static List<Course> Courses = new List<Course>();
 
+        [Authorize]// Protected, only for http requests that have JWT token in headers
         [HttpGet]
         public IActionResult GetCourses()
         {
@@ -22,6 +25,7 @@ namespace ttcm_api.Controllers
             return Ok(Courses);
         }
 
+        
         [HttpPost]
         public IActionResult CreateCourse([FromBody] Course c)
         {

@@ -44,6 +44,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
+//builder.Services.AddAuthorization(options =>
+// options.AddPolicy("AdminOrTrainer", policy => policy.RequireRole("Admin","Trainer")));
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<ICategoryCRUD, CategoryService>();
 builder.Services.AddScoped<IProgramCRUD, ProgramsService>();
@@ -65,7 +68,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
+    
 app.UseAuthentication();
 app.UseAuthorization();
 
